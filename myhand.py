@@ -42,7 +42,7 @@ class Command():
 
 class MyGripper_H100(Command):
 
-    def __init__(self,port,baudrate=115200,id=14,debug=False,recv_timeout=10) :
+    def __init__(self,port="dev/ttyCH343USBO",baudrate=115200,id=14,debug=False,recv_timeout=10) :
         """
         Args:
             port : Serial port number
