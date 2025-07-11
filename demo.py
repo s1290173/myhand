@@ -5,5 +5,5 @@ if __name__=="__main__":
     print("夹爪的实际ID为:",g.get_gripper_Id())
     print(g.set_gripper_joint_angle(1,50))
     time.sleep(2)
-    print(g.set_gripper_joint_angle(0,))
+    print(g.set_gripper_joint_angle(1,0))
     time.sleep(2)
