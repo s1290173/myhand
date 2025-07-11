@@ -7,7 +7,7 @@ if __name__=="__main__":
     time.sleep(2)
     print(g.set_gripper_joint_angle(1,0))
     time.sleep(2)
-    print(g.set_gripper_joint_angle(2,50))
+    print(g.set_gripper_joint_angle(2,200))
     time.sleep(2)
     print(g.set_gripper_joint_angle(2,0))
     time.sleep(2)
