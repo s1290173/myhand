@@ -1,4 +1,4 @@
-from myhand import MyGripper_H100
+from MyHand import MyGripper_H100
 import time
 if __name__=="__main__":
     g=MyGripper_H100("/dev/ttyCH343USB0",baudrate=115200,id=14)##填写实际的串口号和波特率和夹爪ID
