@@ -1,44 +1,9 @@
-from pymycobot.mycobot320 import MyCobot320
-from pymycobot.genre import Angle
+from elegripper import Gripper
 import time
-
-mc = MyCobot320("/dev/ttyAMA0", 115200)
-mc.init_electric_gripper()
-
-mc.power_off()
-mc.power_on()
-
-mc.send_angles([0, 0, 0, 0, 0, 0], 50)
-mc.set_electric_gripper(0)
-mc.set_electric_gripper(0)
-mc.set_electric_gripper(0)
-mc.set_electric_gripper(0)
-mc.set_electric_gripper(0)
-time.sleep(5)
-mc.send_angles([-18, 85, 3, 24.5, 0, 96], 40)
-time.sleep(5)
-mc.send_angles([-18, 84.5, 18, 24.5, 0, 96], 30)
-time.sleep(5)
-
-while True:
-    user_input = input("Enter 1 to start the next sequence: ")
-    if user_input == "1":
-        break
-
-mc.set_electric_gripper(1)
-mc.set_electric_gripper(1)
-mc.set_electric_gripper(1)
-mc.set_electric_gripper(1)
-mc.set_electric_gripper(1)
-time.sleep(5)
-mc.send_angles([-18, 85, 3, 24.5, 0, 96], 30)
-time.sleep(5)
-mc.send_angles([-18, 84.5, 18, 24.5, 0, 96], 40)
-time.sleep(5)
-mc.set_electric_gripper(0)
-mc.set_electric_gripper(0)
-mc.set_electric_gripper(0)
-mc.set_electric_gripper(0)
-mc.set_electric_gripper(0)
-mc.send_angles([0, 0, 0, 0, 0, 0], 50)
-time.sleep(5)
+if __name__=="__main__":
+    g=Gripper("COM27",baudrate=115200,id=14)##填写实际的串口号和波特率和夹爪ID
+    print("夹爪的实际ID为:",g.get_gripper_Id())
+    print(g.set_gripper_value(100,100))
+    time.sleep(2)
+    print(g.set_gripper_value(0,100))
+    time.sleep(2)
