@@ -1,6 +1,6 @@
 import serial, time
 
-PORT = "/dev/ttyUSB0"   # ← 実機のポート名に変更（例: /dev/ttyUSB0, /dev/ttyAMA0, COM7）
+PORT = "/dev/ttyAMA0"   # ← 実機のポート名に変更（例: /dev/ttyUSB0, /dev/ttyAMA0, COM7）
 BAUD = 115200
 ID   = 14               # 既定ID。変えている可能性があれば後のスキャナで探索
 
