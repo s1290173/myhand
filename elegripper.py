@@ -104,40 +104,58 @@ class Gripper(Command):
         return crc.to_bytes(2, byteorder='little')
 
     def __send_cmd(self, cmd):
-        """Processing Messages
+    with self.lock:
+        send_data = cmd + self.__crc16_modbus(cmd)
 
-        Args:
-            cmd(byte) : Message
+        # 送信前にバッファをクリア
+        try:
+            self.ser.reset_input_buffer()
+            self.ser.reset_output_buffer()
+        except Exception:
+            pass
 
-        Raises:
-            TimeoutError: Reply timeout
+        # 送信
+        self.ser.write(send_data)
+        self.ser.flush()
 
-        Returns:
-            Response Reply,If the data length is incorrect, -1 is returned; if the CRC check is incorrect, -2 is returned.
-        """
-        with self.lock:
-            send_data = cmd + self.__crc16_modbus(cmd)
-            # print(send_data.hex())
-            self.ser.write(send_data)
-            self.ser.flush()
-            time.sleep(0.04)
-            recv_data = self.ser.read(11)
-            if not recv_data:
-                raise TimeoutError("Reading data timeout")
-            # print(recv_data.hex())
-            if len(recv_data) == 11:
-                data = recv_data[0:9]
-                crc_data = recv_data[9:]
-                if self.__crc16_modbus(data) == crc_data:
-                    response = data + crc_data
-                    result = int(response.hex()[14:18], 16)
-                    return result
-                else:
-                    return -2
+        # 応答待ち（環境により 0.10〜0.20 を調整）
+        time.sleep(0.15)
 
+        # ---- ここから受信強化 ----
+        deadline = time.time() + 1.2  # 最大待ち時間
+        buf = bytearray()
+        while time.time() < deadline:
+            chunk = self.ser.read(64)  # まとめて読む
+            if chunk:
+                buf.extend(chunk)
+
+                # ヘッダ同期（0xFE 0xFE 探す）
+                while True:
+                    idx = buf.find(b'\xFE\xFE')
+                    if idx == -1:
+                        # ヘッダが見つからない→これ以上読んでも無駄なので break してさらに待つ
+                        break
+                    # ヘッダ位置に合わせて残りを見る
+                    if len(buf) - idx >= 11:
+                        frame = bytes(buf[idx:idx+11])
+                        data, crc = frame[:9], frame[9:]
+                        # CRC 検証（Little-endian）
+                        if self.__crc16_modbus(data) == crc:
+                            # 正常フレーム
+                            result = int(data.hex()[14:18], 16)
+                            return result
+                        else:
+                            # CRC 不一致なら、そのヘッダを捨てて次のヘッダを探す
+                            buf = buf[idx+1:]
+                            continue
+                    else:
+                        # 11 バイトに満たない→さらに読む
+                        break
             else:
-                return -1
+                time.sleep(0.02)
 
+        # ここまで来たらタイムアウト
+        raise TimeoutError("Reading data timeout")
     def set_gripper_value(self, value, speed=100):
         """Setting the gripper position
 
