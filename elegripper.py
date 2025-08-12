@@ -117,33 +117,13 @@ class Gripper(Command):
         """
         with self.lock:
             send_data = cmd + self.__crc16_modbus(cmd)
-            if self._debug:
-                print("TX:", send_data.hex())
-            # 送信前に受信バッファを空にして古いゴミを除去
-            try:
-                self.ser.reset_input_buffer()
-                self.ser.reset_output_buffer()
-            except Exception:
-                pass
+            # print(send_data.hex())
             self.ser.write(send_data)
             self.ser.flush()
-            # デバイスにより応答が遅いことがあるので少し待つ
-            time.sleep(0.12)
-            # 11バイト揃うまで繰り返し読む
-            deadline = time.time() + 1.0
-            buff = bytearray()
-            while len(buff) < 11 and time.time() < deadline:
-                chunk = self.ser.read(11 - len(buff))
-                if chunk:
-                    buff.extend(chunk)
-                else:
-                    time.sleep(0.02)
-            recv_data = bytes(buff)
+            time.sleep(0.04)
+            recv_data = self.ser.read(11)
             if not recv_data:
                 raise TimeoutError("Reading data timeout")
-            if self._debug:
-                print("RX:", recv_data.hex())
-            if len(recv_data) == 11:
             # print(recv_data.hex())
             if len(recv_data) == 11:
                 data = recv_data[0:9]
