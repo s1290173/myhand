@@ -1,7 +1,7 @@
 from elegripper import Gripper
 import time
 
-g = Gripper("/dev/ttyUSB0", baudrate=115200, id=14)
+g = Gripper("/dev/ttyAMA0", baudrate=115200, id=14)
 
 # 念のため有効化（00 01 = enable）
 g.set_gripper_enable(1)
