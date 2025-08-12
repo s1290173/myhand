@@ -101,7 +101,7 @@ class Gripper(Command):
                     crc ^= 0xA001
                 else:
                     crc >>= 1
-        return crc.to_bytes(2, byteorder='big')
+        return crc.to_bytes(2, byteorder='little')
 
     def __send_cmd(self, cmd):
         """Processing Messages
