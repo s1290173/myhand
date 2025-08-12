@@ -3,16 +3,16 @@ from pymycobot.genre import Angle
 import time
 
 mc = MyCobot320("/dev/ttyAMA0", 115200) # 実機のIP/port
-mc.start_client()
+mc.power_on()
+time.sleep(0.3)
 
-# IOで駆動する設定のコントローラなら、DOピンで開閉
-def gripper_open():
-    mc.set_digital_out(16, 0)
-    mc.set_digital_out(17, 1)
+# 開く→閉じる→角度指定（0〜100）
+mc.set_pro_gripper_open(GRIPPER_ID)
+time.sleep(1.0)
 
-def gripper_close():
-    mc.set_digital_out(16, 1)
-    mc.set_digital_out(17, 0)
+mc.set_pro_gripper_close(GRIPPER_ID)
+time.sleep(1.0)
 
-gripper_open();  time.sleep(1.0)
-gripper_close(); time.sleep(1.0)
+mc.set_pro_gripper_angle(GRIPPER_ID, 100)
+time.sleep(1.0)
+mc.set_pro_gripper_angle(GRIPPER_ID, 0)
