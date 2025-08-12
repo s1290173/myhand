@@ -12,7 +12,7 @@ time.sleep(0.3)
 mc.set_pro_gripper_open(GRIPPER_ID)
 time.sleep(1.0)
 
-status = g.get_gripper_status()
+status = mc.get_pro_gripper_status(GRIPPER_ID)
 print("status:", status)
 
 mc.set_pro_gripper_close(GRIPPER_ID)
