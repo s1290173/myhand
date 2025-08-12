@@ -1,7 +1,17 @@
-from elegripper import Gripper
+from pymycobot import ElephantRobot
 import time
 
-g = Gripper("/dev/ttyAMA0", baudrate=115200, id=14)
+mc = MyCobot320("/dev/ttyAMA0", 115200) # 実機のIP/port
+mc.start_client()
 
-print("try FW:", g.get_firmware_version())
-print("try ID:", g.get_gripper_Id()) 
+# IOで駆動する設定のコントローラなら、DOピンで開閉
+def gripper_open():
+    mc.set_digital_out(16, 0)
+    mc.set_digital_out(17, 1)
+
+def gripper_close():
+    mc.set_digital_out(16, 1)
+    mc.set_digital_out(17, 0)
+
+gripper_open();  time.sleep(1.0)
+gripper_close(); time.sleep(1.0)
