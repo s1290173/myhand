@@ -1,6 +1,6 @@
 import serial, time
 
-PORT = "/dev/ttyUSB0"
+PORT = "/dev/ttyAMA0"
 BAUD = 115200
 ID_RANGE = range(1, 255)   # 時間短縮したいなら range(1,50) など
 
