@@ -2,7 +2,7 @@ from pymycobot import MyCobot320
 from pymycobot.genre import Angle
 import time
 
-GRIPPER_ID　= 14
+GRIPPER_ID = 14
 
 mc = MyCobot320("/dev/ttyAMA0", 115200) # 実機のIP/port
 mc.power_on()
